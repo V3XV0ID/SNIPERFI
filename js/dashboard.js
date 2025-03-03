@@ -51,27 +51,28 @@ async function updateDashboard() {
 // Single event listener for generate wallet button
 // Remove any duplicate event listeners and use this single one
 document.addEventListener('DOMContentLoaded', () => {
-    const generateButton = document.getElementById('generateWallet');
-    if (generateButton) {
-        generateButton.addEventListener('click', async () => {
-            try {
-                const result = await window.electronAPI.generateParentWallet();
-                if (result.success) {
-                    const message = `Wallet Generated Successfully!\n\n` +
-                        `Public Key:\n${result.public_key}\n\n` +
-                        `Private Key:\n${result.private_key}\n\n` +
-                        `SAVE THIS PRIVATE KEY NOW! It won't be shown again!`;
-                    alert(message);
-                    updateDashboard();
-                } else {
-                    throw new Error(result.error || 'Failed to generate wallet');
-                }
-            } catch (error) {
-                console.error('Generation error:', error);
-                alert('Error generating wallet: ' + error.message);
+    document.getElementById('generateWallet').addEventListener('click', async () => {
+        try {
+            const result = await window.electronAPI.generateParentWallet();
+            if (result.success) {
+                const publicKeyElement = document.getElementById('parentPublicKey');
+                const privateKeyElement = document.getElementById('parentPrivateKey');
+    
+                publicKeyElement.textContent = result.public_key;
+                privateKeyElement.textContent = '************'; // Initially hide the private key
+    
+                privateKeyElement.addEventListener('click', () => {
+                    privateKeyElement.textContent = result.private_key; // Reveal private key on click
+                });
+    
+                alert('New wallet generated successfully!');
+            } else {
+                throw new Error(result.error || 'Failed to generate wallet');
             }
-        });
-    }
+        } catch (error) {
+            alert('Error generating wallet: ' + error.message);
+        }
+    });
     
     updateDashboard();
     setInterval(updateDashboard, 30000);

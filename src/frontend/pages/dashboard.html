@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SniperFi</title>
+    <link rel="stylesheet" href="../../../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <h1><i class="fas fa-rocket"></i> SniperFi</h1>
+    
+    <section>
+        <h2><i class="fas fa-wallet"></i> Parent Wallet</h2>
+        <div class="wallet-info">
+            <div>
+                <label>Public Key:</label>
+                <span id="publicKey"></span>
+            </div>
+            <div>
+                <label>Balance:</label>
+                <span id="balance" class="balance">SOL</span>
+            </div>
+            <button id="setRpcEndpoint"><i class="fas fa-server"></i> Set RPC Endpoint</button>
+        </div>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-cogs"></i> Wallet Management</h2>
+        <div class="controls">
+            <div>
+                <input type="number" id="walletCount" placeholder="Number of wallets">
+                <button id="generate"><i class="fas fa-plus-circle"></i> Generate</button>
+            </div>
+            <div>
+                <input type="number" id="solAmount" placeholder="SOL amount">
+                <button id="distribute"><i class="fas fa-share-alt"></i> Distribute</button>
+            </div>
+        </div>
+        <div id="walletList" class="wallet-list"></div>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-crosshairs"></i> Token Sniper</h2>
+        <div class="controls">
+            <input type="text" id="tokenMint" placeholder="Token Mint Address">
+            <input type="number" id="amount" placeholder="Amount">
+            <button id="snipe"><i class="fas fa-bolt"></i> Snipe</button>
+        </div>
+    </section>
+
+    <section>
+        <h2><i class="fas fa-history"></i> Transaction History</h2>
+        <div id="transactionHistory" class="transaction-history">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionList">
+                    <!-- Transactions will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script src="../../../js/dashboard.js"></script>
+    <script>
+        // Add some UI enhancement code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to buttons
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 200);
+                });
+            });
+            
+            // Placeholder for wallet list rendering
+            function renderWalletItem(wallet) {
+                return `
+                    <div class="wallet-item">
+                        <div><strong>Address:</strong> ${wallet.address}</div>
+                        <div><strong>Balance:</strong> ${wallet.balance} SOL</div>
+                    </div>
+                `;
+            }
+            
+            // This would be replaced by actual data in your app
+            const demoWallets = [
+                { address: 'Demo1...xyz', balance: '0.5' },
+                { address: 'Demo2...abc', balance: '0.3' }
+            ];
+            
+            // Just for demonstration
+            const walletList = document.getElementById('walletList');
+            if (walletList) {
+                walletList.innerHTML = demoWallets.map(renderWalletItem).join('');
+            }
+        });
+    </script>
+</body>
+</html>
