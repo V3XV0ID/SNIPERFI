@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SniperFi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SniperFi</h1>
+        
+        <div class="wallet-section">
+            <h2>Parent Wallet</h2>
+            <div class="wallet-info">
+                <span>Public Key: <span id="parentPublicKey"></span></span>
+                <span style="margin-left: 20px;">Balance: <span id="parentBalance"></span> SOL</span>
+                <button id="setRPC" style="float: right;">Set RPC Endpoint</button>
+            </div>
+        </div>
+
+        <div class="wallet-section">
+            <h2>Wallet Management</h2>
+            <div class="input-group">
+                <input type="number" id="walletCount" placeholder="Number of wallets">
+                <button id="generateWallets">Generate</button>
+            </div>
+            <div class="input-group">
+                <input type="number" id="solAmount" placeholder="SOL amount">
+                <button id="distributeSOL">Distribute</button>
+            </div>
+        </div>
+
+        <div class="sniper-section">
+            <h2>Token Sniper</h2>
+            <div class="input-group">
+                <input type="text" id="tokenMint" placeholder="Token Mint Address">
+                <input type="number" id="amount" placeholder="Amount" style="width: 100px;">
+                <button id="snipeToken">Snipe</button>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h2>Transaction History</h2>
+            <div id="history"></div>
+        </div>
+
+        <div id="results" class="results-section"></div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+</html>
