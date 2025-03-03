@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SniperFi - Parent Wallet</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="parent-wallet.html" class="active">Parent Wallet</a>
+            <a href="child-wallets.html">Child Wallets</a>
+            <a href="distribution.html">Distribution</a>
+            <a href="sniper.html">Token Sniper</a>
+        </nav>
+        
+        <h1>Parent Wallet Management</h1>
+        
+        <div class="wallet-info-card">
+            <h2>Wallet Information</h2>
+            <div class="info-grid">
+                <p><strong>Public Key:</strong> <span id="parentPublicKey"></span></p>
+                <p><strong>Private Key:</strong> <span id="parentPrivateKey" class="private-key"></span></p>
+                <p><strong>Balance:</strong> <span id="parentBalance">0</span> SOL</p>
+            </div>
+            <div class="button-group">
+                <button id="generateWallet">Generate New Wallet</button>
+                <button id="togglePrivateKey">Show Private Key</button>
+                <button id="setRPC">Set RPC Endpoint</button>
+                <button id="backupWallet">Backup Wallet</button>
+                <button id="restoreWallet">Restore Wallet</button>
+            </div>
+        </div>
+
+        <div class="transaction-history">
+            <h2>Transaction History</h2>
+            <div id="history"></div>
+        </div>
+    </div>
+    <script src="../js/parent-wallet.js"></script>
+</body>
+</html>

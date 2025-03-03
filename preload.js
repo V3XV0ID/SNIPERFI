@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     setRPCEndpoint: (endpoint) => ipcRenderer.invoke('set-rpc-endpoint', endpoint),
     
     // Wallet Generation and Distribution
-    generateWallets: (count) => ipcRenderer.invoke('generate-wallets', count),
+    generateParentWallet: () => ipcRenderer.invoke('generate-parent-wallet'),
     distributeSOL: (amount) => ipcRenderer.invoke('distribute-sol', amount),
     
     // Token Operations

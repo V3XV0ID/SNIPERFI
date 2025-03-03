@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SniperFi - Child Wallets</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="parent-wallet.html">Parent Wallet</a>
+            <a href="child-wallets.html" class="active">Child Wallets</a>
+            <a href="distribution.html">Distribution</a>
+            <a href="sniper.html">Token Sniper</a>
+        </nav>
+        
+        <h1>Child Wallets</h1>
+        
+        <div class="wallet-controls">
+            <div class="input-group">
+                <input type="number" id="walletCount" placeholder="Number of wallets">
+                <button id="generateWallets">Generate Wallets</button>
+            </div>
+        </div>
+
+        <div class="wallet-list">
+            <h2>Generated Wallets</h2>
+            <div id="walletGrid" class="wallet-grid"></div>
+        </div>
+    </div>
+    <script src="../js/child-wallets.js"></script>
+</body>
+</html>

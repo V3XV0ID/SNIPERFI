@@ -15,106 +15,60 @@ function createWindow() {
         }
     });
 
-    win.loadFile('index.html');
+    win.loadFile('pages/dashboard.html');
 }
 
-// Python Bridge
 const pythonBridge = {
-    async generateWallets(count) {
+    async runPythonScript(script, args) {
         return new Promise((resolve, reject) => {
-            PythonShell.run('src/wallet_generator.py', { args: [count] }, (err, results) => {
+            PythonShell.run(`src/${script}`, { args }, (err, results) => {
                 if (err) reject(err);
                 resolve(JSON.parse(results[0]));
             });
         });
     },
 
-    async distributeSOL(amount) {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/distribution.py', { args: [amount] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    },
+    // Dashboard Methods
+    getWalletInfo: () => pythonBridge.runPythonScript('parent_wallet.py', ['info']),
+    getSolBalance: () => pythonBridge.runPythonScript('parent_wallet.py', ['balance']),
+    getWalletCount: () => pythonBridge.runPythonScript('wallet_generator.py', ['count']),
+    getTokenBalances: () => pythonBridge.runPythonScript('parent_wallet.py', ['tokens']),
+    getTransactionHistory: () => pythonBridge.runPythonScript('parent_wallet.py', ['history']),
 
-    async snipeToken(tokenMint, amount) {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/token_sniper.py', { args: [tokenMint, amount] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    },
+    // Parent Wallet Methods
+    setRPCEndpoint: (endpoint) => pythonBridge.runPythonScript('parent_wallet.py', ['set-rpc', endpoint]),
+    backupWallet: (password) => pythonBridge.runPythonScript('parent_wallet.py', ['backup', password]),
+    restoreWallet: (file, password) => pythonBridge.runPythonScript('parent_wallet.py', ['restore', file, password]),
+    generateParentWallet: () => pythonBridge.runPythonScript('parent_wallet.py', ['generate']),
 
-    async getWalletInfo() {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/parent_wallet.py', { args: ['info'] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    },
+    // Child Wallet Methods
+    generateWallets: (count) => pythonBridge.runPythonScript('wallet_generator.py', [count]),
+    getWallets: () => pythonBridge.runPythonScript('wallet_generator.py', ['list']),
 
-    async getSolBalance() {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/parent_wallet.py', { args: ['balance'] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    },
+    // Distribution Methods
+    distributeSOL: (amount) => pythonBridge.runPythonScript('distribution.py', [amount]),
 
-    async setRPCEndpoint(endpoint) {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/parent_wallet.py', { args: ['set-rpc', endpoint] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    },
-
-    async getTransactionHistory() {
-        return new Promise((resolve, reject) => {
-            PythonShell.run('src/parent_wallet.py', { args: ['history'] }, (err, results) => {
-                if (err) reject(err);
-                resolve(JSON.parse(results[0]));
-            });
-        });
-    }
+    // Token Sniper Methods
+    snipeToken: (mint, amount) => pythonBridge.runPythonScript('token_sniper.py', [mint, amount])
 };
 
 app.whenReady().then(() => {
     createWindow();
 
     // Set up IPC handlers
-    ipcMain.handle('generate-wallets', async (event, count) => {
-        return await pythonBridge.generateWallets(count);
-    });
-
-    ipcMain.handle('distribute-sol', async (event, amount) => {
-        return await pythonBridge.distributeSOL(amount);
-    });
-
-    ipcMain.handle('snipe-token', async (event, tokenMint, amount) => {
-        return await pythonBridge.snipeToken(tokenMint, amount);
-    });
-
-    ipcMain.handle('get-wallet-info', async () => {
-        return await pythonBridge.getWalletInfo();
-    });
-
-    ipcMain.handle('get-sol-balance', async () => {
-        return await pythonBridge.getSolBalance();
-    });
-
-    ipcMain.handle('set-rpc-endpoint', async (event, endpoint) => {
-        return await pythonBridge.setRPCEndpoint(endpoint);
-    });
-
-    ipcMain.handle('get-transaction-history', async () => {
-        return await pythonBridge.getTransactionHistory();
-    });
+    ipcMain.handle('get-wallet-info', () => pythonBridge.getWalletInfo());
+    ipcMain.handle('get-sol-balance', () => pythonBridge.getSolBalance());
+    ipcMain.handle('get-wallet-count', () => pythonBridge.getWalletCount());
+    ipcMain.handle('get-token-balances', () => pythonBridge.getTokenBalances());
+    ipcMain.handle('get-transaction-history', () => pythonBridge.getTransactionHistory());
+    ipcMain.handle('set-rpc-endpoint', (_, endpoint) => pythonBridge.setRPCEndpoint(endpoint));
+    ipcMain.handle('backup-wallet', (_, password) => pythonBridge.backupWallet(password));
+    ipcMain.handle('restore-wallet', (_, file, password) => pythonBridge.restoreWallet(file, password));
+    ipcMain.handle('generate-wallets', (_, count) => pythonBridge.generateWallets(count));
+    ipcMain.handle('get-wallets', () => pythonBridge.getWallets());
+    ipcMain.handle('distribute-sol', (_, amount) => pythonBridge.distributeSOL(amount));
+    ipcMain.handle('snipe-token', (_, mint, amount) => pythonBridge.snipeToken(mint, amount));
+    ipcMain.handle('generate-parent-wallet', () => pythonBridge.generateParentWallet());
 });
 
 app.on('window-all-closed', () => {

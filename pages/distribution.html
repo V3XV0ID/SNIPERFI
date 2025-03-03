@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SniperFi - Distribution</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="parent-wallet.html">Parent Wallet</a>
+            <a href="child-wallets.html">Child Wallets</a>
+            <a href="distribution.html" class="active">Distribution</a>
+            <a href="sniper.html">Token Sniper</a>
+        </nav>
+        
+        <h1>SOL Distribution</h1>
+        
+        <div class="distribution-controls">
+            <div class="input-group">
+                <input type="number" id="solAmount" placeholder="SOL amount per wallet">
+                <button id="distributeSOL">Distribute SOL</button>
+            </div>
+        </div>
+
+        <div class="distribution-status">
+            <h2>Distribution Status</h2>
+            <div id="distributionResults"></div>
+        </div>
+    </div>
+    <script src="../js/distribution.js"></script>
+</body>
+</html>

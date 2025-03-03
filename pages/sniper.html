@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SniperFi - Token Sniper</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="parent-wallet.html">Parent Wallet</a>
+            <a href="child-wallets.html">Child Wallets</a>
+            <a href="distribution.html">Distribution</a>
+            <a href="sniper.html" class="active">Token Sniper</a>
+        </nav>
+        
+        <h1>Token Sniper</h1>
+        
+        <div class="sniper-controls">
+            <div class="input-group">
+                <input type="text" id="tokenMint" placeholder="Token Mint Address">
+                <input type="number" id="amount" placeholder="Amount">
+                <button id="snipeToken">Snipe Token</button>
+            </div>
+        </div>
+
+        <div class="sniper-status">
+            <h2>Sniper Status</h2>
+            <div id="sniperResults"></div>
+        </div>
+    </div>
+    <script src="../js/sniper.js"></script>
+</body>
+</html>
