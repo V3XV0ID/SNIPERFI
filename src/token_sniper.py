@@ -9,6 +9,8 @@ import asyncio
 from solana.rpc.commitment import Confirmed
 from solana.publickey import PublicKey
 import struct
+import sys
+import json
 
 class TokenSniper:
     def __init__(self, rpc_url: str = "https://api.mainnet-beta.solana.com"):
@@ -145,3 +147,33 @@ class TokenSniper:
             program_id=raydium_program,
             data=instruction_data
         )
+
+async def main():
+    if len(sys.argv) != 3:
+        print(json.dumps({"error": "Invalid arguments"}))
+        sys.exit(1)
+
+    try:
+        token_mint = sys.argv[1]
+        amount = float(sys.argv[2])
+        
+        # Load wallets from saved file
+        with open("wallets.json", "r") as f:
+            wallet_data = json.load(f)
+        
+        sniper = TokenSniper()
+        results = await sniper.snipe_token_all_wallets(wallet_data["wallets"], token_mint, amount)
+        
+        response = {
+            "success": True,
+            "message": f"Sniped token {token_mint} with {amount} SOL per wallet",
+            "results": results
+        }
+        print(json.dumps(response))
+        
+    except Exception as e:
+        print(json.dumps({"error": str(e)}))
+        sys.exit(1)
+
+if __name__ == "__main__":
+    asyncio.run(main())
