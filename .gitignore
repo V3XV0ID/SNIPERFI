@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+env/
+venv/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Wallet files
+wallet_config.json
+parent_wallet.json
+wallets.json
+wallet_backup.json
+transaction_history.json
+
+# Logs
+*.log
+npm-debug.log*
