@@ -2,10 +2,18 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { PythonShell } = require('python-shell');
 
-app.applicationSupportsSecureRestorableState = true;
+// Store window instance
+let mainWindow = null;
 
 function createWindow() {
-    const win = new BrowserWindow({
+    // Return focus if window exists
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+        return;
+    }
+
+    mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         webPreferences: {
@@ -15,7 +23,27 @@ function createWindow() {
         }
     });
 
-    win.loadFile('pages/dashboard.html');
+    mainWindow.loadFile('pages/dashboard.html');
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
+}
+
+// Ensure single instance
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+        }
+    });
+
+    app.whenReady().then(createWindow);
 }
 
 const pythonBridge = {
