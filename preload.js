@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld(
         getWallets: () => ipcRenderer.invoke('get-wallets'),
         distributeSOL: (amount) => ipcRenderer.invoke('distribute-sol', amount),
         snipeToken: (mint, amount) => ipcRenderer.invoke('snipe-token', mint, amount),
-        generateParentWallet: () => ipcRenderer.invoke('generate-parent-wallet')
+        generateParentWallet: (password) => ipcRenderer.invoke('generate-parent-wallet', password)
     }
 );
 

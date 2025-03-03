@@ -39,10 +39,16 @@ document.getElementById('setRPC').addEventListener('click', async () => {
 
 document.getElementById('backupWallet').addEventListener('click', async () => {
     try {
-        const password = prompt('Enter password for backup:');
-        if (password) {
-            const result = await window.electronAPI.backupWallet(password);
-            alert(result.message);
+        const password = prompt('Enter password for backup (recommended for security):');
+        const result = await window.electronAPI.backupWallet(password);
+        if (result.success) {
+            // Create a download link for the backup file
+            const backupPath = result.backup_path;
+            const fileName = backupPath.split('/').pop();
+            
+            alert(`Wallet backed up successfully! The backup file is located at: ${backupPath}\n\nPlease keep this file and your password safe.`);
+        } else {
+            throw new Error(result.error?.message || 'Failed to backup wallet');
         }
     } catch (error) {
         alert('Error backing up wallet: ' + error.message);
@@ -51,11 +57,19 @@ document.getElementById('backupWallet').addEventListener('click', async () => {
 
 document.getElementById('restoreWallet').addEventListener('click', async () => {
     try {
-        const password = prompt('Enter backup password:');
-        if (password) {
-            const result = await window.electronAPI.restoreWallet('wallet_backup.json', password);
+        const backupPath = prompt('Enter the path to your backup file:', 'wallets/backups/wallet_backup.json');
+        if (!backupPath) return;
+        
+        const password = prompt('Enter backup password (leave empty if no password was used):');
+        const result = await window.electronAPI.restoreWallet(backupPath, password);
+        
+        if (result.success) {
             alert(result.message);
             location.reload();
+        } else if (result.requires_password) {
+            alert('This backup requires a password. Please try again with the correct password.');
+        } else {
+            throw new Error(result.error?.message || 'Failed to restore wallet');
         }
     } catch (error) {
         alert('Error restoring wallet: ' + error.message);
@@ -65,12 +79,13 @@ document.getElementById('restoreWallet').addEventListener('click', async () => {
 document.getElementById('generateWallet').addEventListener('click', async () => {
     try {
         if (confirm('Are you sure you want to generate a new parent wallet? This will replace the current wallet.')) {
-            const result = await window.electronAPI.generateParentWallet();
+            const password = prompt('Enter a password to encrypt your wallet (leave empty for no password):');
+            const result = await window.electronAPI.generateParentWallet(password);
             if (result.success) {
                 alert('New wallet generated successfully!');
                 location.reload();
             } else {
-                throw new Error(result.error);
+                throw new Error(result.error?.message || 'Failed to generate wallet');
             }
         }
     } catch (error) {

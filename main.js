@@ -93,7 +93,7 @@ const pythonBridge = {
     return new Promise((resolve, reject) => {
       const options = {
         mode: 'json',
-        pythonPath: 'python3',
+        pythonPath: '/Users/FRESH/Projects/SNIPERFI/venv/bin/python3',
         pythonOptions: ['-u'],
         scriptPath: path.join(__dirname, 'src'),
         args
@@ -142,15 +142,15 @@ const pythonBridge = {
   },
   
   async backupWallet(password) {
-    return this.runPythonScript('parent_wallet.py', ['backup', password]);
+    return this.runPythonScript('enhanced_wallet.py', ['backup', password]);
   },
   
   async restoreWallet(file, password) {
-    return this.runPythonScript('parent_wallet.py', ['restore', file, password]);
+    return this.runPythonScript('enhanced_wallet.py', ['restore', file, password]);
   },
   
-  async generateParentWallet() {
-    return this.runPythonScript('parent_wallet.py', ['generate']);
+  async generateParentWallet(password) {
+    return this.runPythonScript('enhanced_wallet.py', ['generate', password]);
   },
 
   // Child Wallet Methods
@@ -286,25 +286,9 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle('generate-parent-wallet', async () => {
+  ipcMain.handle('generate-parent-wallet', async (_, password) => {
     try {
-      const result = await pythonBridge.runPythonScript('parent_wallet.py', ['generate']);
-      if (!result.success) {
-        throw new Error(result.error.message);
-      }
-      return result;
-    } catch (error) {
-      console.error('Error generating parent wallet:', error);
-      return {
-        success: false,
-        error: error.message || 'Failed to generate parent wallet'
-      };
-    }
-  });
-
-  ipcMain.handle('generate-parent-wallet', async () => {
-    try {
-      const result = await pythonBridge.generateParentWallet();
+      const result = await pythonBridge.generateParentWallet(password);
       return result;
     } catch (error) {
       console.error('Error in generate-parent-wallet:', error);
