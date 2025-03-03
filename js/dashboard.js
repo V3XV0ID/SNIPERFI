@@ -2,12 +2,13 @@ async function updateDashboard() {
     try {
         // Update parent wallet info
         const info = await window.electronAPI.getWalletInfo();
-        document.getElementById('parentPublicKey').textContent = info.public_key || 'No wallet found';
+        const publicKeyElement = document.getElementById('parentPublicKey');
+        publicKeyElement.textContent = info.public_key || 'No wallet found';
         
         // Update balance
         const balance = await window.electronAPI.getSolBalance();
-        document.getElementById('parentBalance').textContent = balance.toFixed(4);
-
+        document.getElementById('parentBalance').textContent = balance ? balance.toFixed(4) : '0';
+        
         // Update wallet count
         const wallets = await window.electronAPI.getWalletCount();
         document.getElementById('walletCount').textContent = wallets;
@@ -47,6 +48,22 @@ async function updateDashboard() {
     }
 }
 
+document.getElementById('generateWallet').addEventListener('click', async () => {
+    try {
+        const result = await window.electronAPI.generateParentWallet();
+        if (result.success) {
+            alert('New wallet generated successfully!');
+            updateDashboard();
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        alert('Error generating wallet: ' + error.message);
+    }
+});
+
+// Initial dashboard update
+updateDashboard();
 // Update dashboard every 30 seconds
 setInterval(updateDashboard, 30000);
 updateDashboard(); // Initial update
